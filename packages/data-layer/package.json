@@ -1,11 +1,20 @@
 {
-  "name": "@omniscribe/data-layer",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "build": "tsc --build"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.3"
-  }
+    "name":  "@omniscribe/data-layer",
+    "version":  "1.0.0",
+    "type":  "module",
+    "scripts":  {
+                    "build":  "tsc --build"
+                },
+    "dependencies":  {
+                         "@supabase/supabase-js":  "^2.45.3"
+                     },
+    "main":  "./dist/index.js",
+    "types":  "./dist/index.d.ts",
+    "exports":  {
+                    ".":  {
+                              "require":  "./dist/index.js",
+                              "types":  "./dist/index.d.ts",
+                              "import":  "./dist/index.js"
+                          }
+                }
 }

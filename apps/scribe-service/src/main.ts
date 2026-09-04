@@ -29,13 +29,15 @@ import { MessageWorker } from './infrastructure/workers/MessageWorker.js';
 import { SoapWorker } from './infrastructure/workers/SoapWorker.js';
 import { FhirWorker } from './infrastructure/workers/FhirWorker.js';
 
-// Mock Repositories (would be injected normally from DB)
-const mockSessionRepo: any = {};
-const mockMessageRepo: any = {};
-const mockRecordRepo: any = {};
-const mockTaskRepo: any = {};
-const mockSoapNoteRepo: any = {};
-const mockFhirBundleRepo: any = {};
+import {
+  createSupabaseClient,
+  SupabaseSessionRepository,
+  SupabaseMessageRepository,
+  SupabaseRecordRepository,
+  SupabaseTaskRepository,
+  SupabaseSoapRepository,
+  SupabaseFhirRepository
+} from '@omniscribe/data-layer';
 
 async function bootstrap() {
   const app = express();
@@ -49,21 +51,38 @@ async function bootstrap() {
     next();
   });
 
-  const redis = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379');
+  const redis = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+    maxRetriesPerRequest: null,
+  });
   const queueProducer = new ScribeQueueProducer(redis);
 
+  // Initialize Supabase and Repositories
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set in environment.');
+  }
+
+  const supabaseClient = createSupabaseClient(supabaseUrl, supabaseKey);
+  const sessionRepo = new SupabaseSessionRepository(supabaseClient);
+  const messageRepo = new SupabaseMessageRepository(supabaseClient);
+  const recordRepo = new SupabaseRecordRepository(supabaseClient);
+  const taskRepo = new SupabaseTaskRepository(supabaseClient);
+  const soapNoteRepo = new SupabaseSoapRepository(supabaseClient);
+  const fhirBundleRepo = new SupabaseFhirRepository(supabaseClient);
+
   // Usecases
-  const createSessionUC = new CreateSession(mockSessionRepo);
-  const getSessionUC = new GetSession(mockSessionRepo);
-  const updateSessionUC = new UpdateSession(mockSessionRepo);
-  const submitMessageUC = new SubmitMessage(mockSessionRepo, mockMessageRepo, queueProducer);
-  const listMessagesUC = new ListMessages(mockSessionRepo, mockMessageRepo);
-  const getRecordsUC = new GetRecords(mockSessionRepo, mockRecordRepo);
-  const generateSoapUC = new GenerateSoap(mockSessionRepo, mockTaskRepo, queueProducer);
-  const getTaskUC = new GetTask(mockTaskRepo);
-  const getSoapNoteUC = new GetSoapNote(mockSessionRepo, mockSoapNoteRepo);
-  const exportFhirUC = new ExportFhir(mockSessionRepo, mockSoapNoteRepo, mockTaskRepo, queueProducer);
-  const getFhirBundleUC = new GetFhirBundle(mockSessionRepo, mockFhirBundleRepo);
+  const createSessionUC = new CreateSession(sessionRepo as any);
+  const getSessionUC = new GetSession(sessionRepo as any);
+  const updateSessionUC = new UpdateSession(sessionRepo as any);
+  const submitMessageUC = new SubmitMessage(sessionRepo as any, messageRepo as any, queueProducer);
+  const listMessagesUC = new ListMessages(sessionRepo as any, messageRepo as any);
+  const getRecordsUC = new GetRecords(sessionRepo as any, recordRepo as any);
+  const generateSoapUC = new GenerateSoap(sessionRepo as any, taskRepo as any, queueProducer);
+  const getTaskUC = new GetTask(taskRepo as any);
+  const getSoapNoteUC = new GetSoapNote(sessionRepo as any, soapNoteRepo as any);
+  const exportFhirUC = new ExportFhir(sessionRepo as any, soapNoteRepo as any, taskRepo as any, queueProducer);
+  const getFhirBundleUC = new GetFhirBundle(sessionRepo as any, fhirBundleRepo as any);
 
   // Controllers
   const healthController = new HealthController();
@@ -89,14 +108,15 @@ async function bootstrap() {
   app.use(errorHandler);
 
   // Workers
-  const messageWorker = new MessageWorker(redis, mockMessageRepo, mockRecordRepo, mockSessionRepo);
-  const soapWorker = new SoapWorker(redis, mockTaskRepo, mockRecordRepo, mockSoapNoteRepo);
-  const fhirWorker = new FhirWorker(redis, mockTaskRepo, mockSoapNoteRepo, mockFhirBundleRepo);
+  const messageWorker = new MessageWorker(redis, messageRepo as any, recordRepo as any, sessionRepo as any);
+  const soapWorker = new SoapWorker(redis, taskRepo as any, recordRepo as any, soapNoteRepo as any);
+  const fhirWorker = new FhirWorker(redis, taskRepo as any, soapNoteRepo as any, fhirBundleRepo as any);
 
-  const port = process.env.SCRIBE_SERVICE_PORT || 3000;
+  const port = process.env.SCRIBE_SERVICE_PORT || 4001;
   app.listen(port, () => {
-    console.log(`Scribe service listening on port ${port}`);
+    console.log(`[Scribe Service] Listening on port ${port}`);
   });
 }
 
 bootstrap().catch(console.error);
+

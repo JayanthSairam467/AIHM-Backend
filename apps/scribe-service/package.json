@@ -1,28 +1,31 @@
 {
-  "name": "@omniscribe/scribe-service",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsc --build",
-    "dev": "tsx watch src/main.ts",
-    "start": "node dist/main.js"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "bullmq": "^5.12.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "helmet": "^7.1.0",
-    "ioredis": "^5.4.1",
-    "pino": "^9.4.0",
-    "pino-http": "^10.3.0",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "tsx": "^4.19.0"
-  }
+    "name":  "@omniscribe/scribe-service",
+    "version":  "1.0.0",
+    "private":  true,
+    "type":  "module",
+    "scripts":  {
+                    "build":  "tsc --build",
+                    "dev":  "tsx --env-file=../../.env watch src/main.ts",
+                    "start":  "node --env-file=../../.env dist/main.js"
+                },
+    "dependencies":  {
+                         "@supabase/supabase-js":  "^2.45.0",
+                         "bullmq":  "^5.12.0",
+                         "cors":  "^2.8.5",
+                         "dotenv":  "^16.4.5",
+                         "express":  "^4.21.0",
+                         "helmet":  "^7.1.0",
+                         "ioredis":  "^5.4.1",
+                         "pino":  "^9.4.0",
+                         "pino-http":  "^10.3.0",
+                         "zod":  "^3.23.8",
+                         "@omniscribe/data-layer":  "*",
+                         "@omniscribe/config":  "*",
+                         "@omniscribe/contracts":  "*"
+                     },
+    "devDependencies":  {
+                            "@types/cors":  "^2.8.17",
+                            "@types/express":  "^4.17.21",
+                            "tsx":  "^4.19.0"
+                        }
 }

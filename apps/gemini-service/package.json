@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build",
-    "dev": "tsx watch src/main.ts",
-    "start": "node dist/main.js"
+    "dev": "tsx --env-file=../../.env watch src/main.ts",
+    "start": "node --env-file=../../.env dist/main.js"
   },
   "dependencies": {
     "@google/genai": "^2.20.0",
