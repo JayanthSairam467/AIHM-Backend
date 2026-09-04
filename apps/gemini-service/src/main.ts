@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { GeminiAdapter } from './infrastructure/external/gemini/GeminiAdapter.js';
 import { GenerateSoapUseCase } from './application/use-cases/GenerateSoap.js';
 import { createRouter } from './presentation/routes/index.js';
@@ -14,6 +15,7 @@ async function bootstrap() {
   }
 
   const app = express();
+  app.use(cors());
   app.use(express.json());
 
   const scribeModel = new GeminiAdapter(apiKey, model);

@@ -5,7 +5,7 @@
     "type":  "module",
     "scripts":  {
                     "build":  "tsc --build",
-                    "dev":  "tsx --env-file=../../.env watch src/main.ts",
+                    "dev":  "tsx watch --env-file=../../.env src/main.ts",
                     "start":  "node --env-file=../../.env dist/main.js"
                 },
     "dependencies":  {

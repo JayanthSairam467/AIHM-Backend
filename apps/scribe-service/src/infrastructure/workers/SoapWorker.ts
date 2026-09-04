@@ -22,11 +22,16 @@ export class SoapWorker {
         try {
           const records = await this.recordRepo.findBySessionId(sessionId);
           
-          // Call gemini-service HTTP endpoint here (mocked for now)
-          const response = await fetch('http://localhost:3001/generate/soap', {
+          // Call gemini-service HTTP endpoint
+          const geminiUrl = process.env.GEMINI_SERVICE_URL || 'http://localhost:4002';
+          const response = await fetch(`${geminiUrl}/generate-soap`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionId, specialty, records })
+            body: JSON.stringify({ 
+              sessionId, 
+              specialty, 
+              transcript: records.map(r => r.content).join('\n') 
+            })
           });
           
           if (!response.ok) throw new Error('Failed to generate SOAP');
