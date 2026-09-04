@@ -1,0 +1,11 @@
+{
+  "name": "@omniscribe/data-layer",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.3"
+  }
+}

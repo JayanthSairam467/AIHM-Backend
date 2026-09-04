@@ -1,0 +1,12 @@
+{
+  "name": "@omniscribe/messaging",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "bullmq": "^5.13.0",
+    "ioredis": "^5.4.1"
+  }
+}
