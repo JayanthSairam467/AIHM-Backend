@@ -9,3 +9,4 @@ export * from './GetTask.js';
 export * from './GetSoapNote.js';
 export * from './ExportFhir.js';
 export * from './GetFhirBundle.js';
+export * from './SaveSoapNote.js';
