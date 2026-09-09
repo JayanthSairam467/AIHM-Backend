@@ -8,6 +8,7 @@ import type { RecordController } from '../controllers/RecordController.js';
 import type { TaskController } from '../controllers/TaskController.js';
 import type { SoapController } from '../controllers/SoapController.js';
 import type { FhirController } from '../controllers/FhirController.js';
+import type { PharmacyController } from '../controllers/PharmacyController.js';
 
 export function createRouter(
   healthController: HealthController,
@@ -16,7 +17,8 @@ export function createRouter(
   recordController: RecordController,
   taskController: TaskController,
   soapController: SoapController,
-  fhirController: FhirController
+  fhirController: FhirController,
+  pharmacyController: PharmacyController
 ): Router {
   const router = Router();
 
@@ -73,6 +75,9 @@ export function createRouter(
   // FHIR
   router.post('/scribe/sessions/:sessionId/fhir/export', validateUuidParam('sessionId'), (req, res, next) => fhirController.exportFhir(req, res, next));
   router.get('/scribe/sessions/:sessionId/fhir', validateUuidParam('sessionId'), (req, res, next) => fhirController.getFhirBundle(req, res, next));
+
+  // Pharmacy
+  router.post('/scribe/pharmacy/alert', (req, res) => pharmacyController.alertPharmacy(req, res));
 
   return router;
 }

@@ -14,6 +14,7 @@ import { RecordController } from './presentation/controllers/RecordController.js
 import { TaskController } from './presentation/controllers/TaskController.js';
 import { SoapController } from './presentation/controllers/SoapController.js';
 import { FhirController } from './presentation/controllers/FhirController.js';
+import { PharmacyController } from './presentation/controllers/PharmacyController.js';
 
 import {
   CreateSession, GetSession, UpdateSession,
@@ -92,6 +93,7 @@ async function bootstrap() {
   const taskController = new TaskController(generateSoapUC, getTaskUC);
   const soapController = new SoapController(getSoapNoteUC);
   const fhirController = new FhirController(exportFhirUC, getFhirBundleUC);
+  const pharmacyController = new PharmacyController();
 
   // Routes
   const router = createRouter(
@@ -101,7 +103,8 @@ async function bootstrap() {
     recordController,
     taskController,
     soapController,
-    fhirController
+    fhirController,
+    pharmacyController
   );
   
   app.use('/', router);
