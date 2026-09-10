@@ -29,10 +29,10 @@ describe('BundleAssembler', () => {
     // Should have 2 entries (Composition, Patient)
     expect(bundle.entry).toHaveLength(2);
     
-    expect(bundle.entry[0].resource.resourceType).toBe('Composition');
-    expect(bundle.entry[0].fullUrl).toBe('urn:uuid:comp-1');
+    expect(bundle.entry![0]!.resource!.resourceType).toBe('Composition');
+    expect(bundle.entry![0]!.fullUrl).toBe('urn:uuid:comp-1');
     
-    expect(bundle.entry[1].resource.resourceType).toBe('Patient');
-    expect(bundle.entry[1].fullUrl).toBe('urn:uuid:pat-1');
+    expect(bundle.entry![1]!.resource!.resourceType).toBe('Patient');
+    expect(bundle.entry![1]!.fullUrl).toBe('urn:uuid:pat-1');
   });
 });

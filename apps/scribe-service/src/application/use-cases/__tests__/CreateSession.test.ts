@@ -3,7 +3,7 @@ import { CreateSession } from '../CreateSession.js';
 import type { SessionRepository } from '../../../infrastructure/repositories/types.js';
 
 describe('CreateSession Use Case', () => {
-  let mockSessionRepo: ReturnType<typeof vi.fn>;
+  let mockSessionRepo: any;
   let useCase: CreateSession;
 
   beforeEach(() => {

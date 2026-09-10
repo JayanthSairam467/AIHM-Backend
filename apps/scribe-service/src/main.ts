@@ -24,6 +24,7 @@ import {
   GetSoapNote,
   ExportFhir, GetFhirBundle
 } from './application/use-cases/index.js';
+import { SaveSoapNote } from './application/use-cases/SaveSoapNote.js';
 
 import { ScribeQueueProducer } from './infrastructure/messaging/ScribeQueueProducer.js';
 import { MessageWorker } from './infrastructure/workers/MessageWorker.js';
@@ -82,6 +83,7 @@ async function bootstrap() {
   const generateSoapUC = new GenerateSoap(sessionRepo as any, taskRepo as any, queueProducer);
   const getTaskUC = new GetTask(taskRepo as any);
   const getSoapNoteUC = new GetSoapNote(sessionRepo as any, soapNoteRepo as any);
+  const saveSoapNoteUC = new SaveSoapNote(soapNoteRepo as any);
   const exportFhirUC = new ExportFhir(sessionRepo as any, soapNoteRepo as any, taskRepo as any, queueProducer);
   const getFhirBundleUC = new GetFhirBundle(sessionRepo as any, fhirBundleRepo as any);
 
@@ -91,7 +93,7 @@ async function bootstrap() {
   const messageController = new MessageController(submitMessageUC, listMessagesUC);
   const recordController = new RecordController(getRecordsUC);
   const taskController = new TaskController(generateSoapUC, getTaskUC);
-  const soapController = new SoapController(getSoapNoteUC);
+  const soapController = new SoapController(getSoapNoteUC, saveSoapNoteUC);
   const fhirController = new FhirController(exportFhirUC, getFhirBundleUC);
   const pharmacyController = new PharmacyController();
 
