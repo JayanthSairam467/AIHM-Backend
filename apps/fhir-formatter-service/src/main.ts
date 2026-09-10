@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { SoapToPatientMapper } from './infrastructure/mappers/SoapToPatientMapper.js';
 import { SoapToPractitionerMapper } from './infrastructure/mappers/SoapToPractitionerMapper.js';
 import { SoapToEncounterMapper } from './infrastructure/mappers/SoapToEncounterMapper.js';
@@ -11,7 +12,7 @@ import { FhirBundleValidator } from './infrastructure/validation/FhirBundleValid
 import { FormatFhirBundle } from './application/use-cases/FormatFhirBundle.js';
 import { createRouter } from './presentation/routes/index.js';
 
-const port = process.env.FHIR_FORMATTER_SERVICE_PORT || 3002;
+const port = process.env.PORT || process.env.FHIR_FORMATTER_SERVICE_PORT || 3002;
 
 const patientMapper = new SoapToPatientMapper();
 const practitionerMapper = new SoapToPractitionerMapper();
@@ -36,6 +37,7 @@ const formatFhirBundle = new FormatFhirBundle(
 );
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const router = createRouter(formatFhirBundle);
