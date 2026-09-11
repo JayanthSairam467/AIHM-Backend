@@ -68,7 +68,7 @@ export interface FhirMedicationRequest extends FhirResource {
   resourceType: 'MedicationRequest';
   status: string;
   intent: string;
-  medicationCodeableConcept: { text: string };
+  medication: { concept: { text: string } };
   subject: { reference: string };
   encounter: { reference: string };
   dosageInstruction?: Array<{

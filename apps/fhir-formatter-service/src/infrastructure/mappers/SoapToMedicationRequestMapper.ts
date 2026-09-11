@@ -13,7 +13,7 @@ export class SoapToMedicationRequestMapper {
       id: randomUUID(),
       status: 'active',
       intent: 'order',
-      medicationCodeableConcept: { text: typeof med === 'string' ? med : med.name || 'Unknown Medication' },
+      medication: { concept: { text: typeof med === 'string' ? med : med.name || 'Unknown Medication' } },
       subject: { reference: `urn:uuid:${patientId}` },
       encounter: { reference: `urn:uuid:${encounterId}` },
       dosageInstruction: med.instructions || med.dosage ? [{ text: med.instructions || med.dosage }] : undefined,
